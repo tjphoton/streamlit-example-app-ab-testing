@@ -139,7 +139,7 @@ with col1:
 with col2:
     st.markdown("##### Group B")
     Pop_B = st.number_input('population count', value=254)
-    Evt_B = st.number_input('event count', value = 30)
+    Evt_B = st.number_input('event count', value = 41)
 
 st.markdown("### Adjust test parameters")
 
