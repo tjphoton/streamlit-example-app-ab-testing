@@ -256,5 +256,3 @@ with mcol2:
     ax.set_title(f"Event % at {(1-st.session_state.alpha)*100}% Confidence Level")
 
     st.pyplot(fig)
-
-    st.write(z)
