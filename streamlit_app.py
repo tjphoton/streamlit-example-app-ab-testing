@@ -119,12 +119,14 @@ def calculate_significance(
         st.session_state.alpha, st.session_state.p
     )
 
-st.image("versai.png", width=150)
 st.write(
     """
     ## Significance Calculation Tool
     """
 )
+st.image("versai.png", width=120)
+st.write("")
+st.write("")
 
 st.markdown("### Type in your data (or use the default sample data)")
 #st.write("Type in your data to see whether the difference between two groups is significant")
