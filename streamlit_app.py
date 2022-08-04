@@ -1,14 +1,14 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import scipy.stats
+import scipy.stats as stats
 from scipy.stats import norm
 import altair as alt
 import matplotlib.pyplot as plt
 
 
 st.set_page_config(
-    page_title="A/B Testing App", page_icon="📊", initial_sidebar_state="expanded"
+    page_title="Significance Testing App", page_icon="📊", initial_sidebar_state="expanded"
 )
 
 
@@ -144,26 +144,32 @@ with col2:
 st.markdown("### Adjust test parameters")
 
 with st.form(key="my_form"):
-    st.radio(
-        "Hypothesis type",
-        options=["Two-sided", "One-sided"],
-        index=0,
-        key="hypothesis",
-        help="Use one-tailed test if you have a specific prediction about the direction of the difference, "
-             "because it has more statistical power than a two-tailed test at the same significance (alpha) level. "
-             "When in doubt, it is almost always more appropriate to use a two-tailed test. ",
-    )
-    st.slider(
-        "Significance level (α)",
-        min_value=0.01,
-        max_value=0.20,
-        value=0.05,
-        step=0.01,
-        key="alpha",
-        help=" The probability of mistakenly rejecting the null hypothesis, if the null hypothesis is true. This is also called false positive and type I error. ",
-    )
+    col1, col2, col3 = st.columns(3)
 
-    submit_button = st.form_submit_button(label="Submit")
+    with col1:
+        st.radio(
+            "Hypothesis type",
+            options=["Two-sided", "One-sided"],
+            index=0,
+            key="hypothesis",
+            help="Use a two-tailed test when you want to test the difference between two groups. "
+                 "Only use one-tailed test if you have a specific prediction about the direction of the difference, "
+                 "because it has more statistical power than a two-tailed test at the same significance (alpha) level. "
+                 "When in doubt, it is almost always more appropriate to two-tailed test. "
+        )
+
+    with col2:
+        st.slider(
+            "Significance level (α)",
+            min_value=0.01,
+            max_value=0.20,
+            value=0.05,
+            step=0.01,
+            key="alpha",
+            help=" The probability of mistakenly rejecting the null hypothesis, if the null hypothesis is true. This is also called false positive and type I error. ",
+        )
+    with col3:
+        submit_button = st.form_submit_button(label="Submit")
 
 # Obtain the metrics to display
 calculate_significance(
@@ -228,7 +234,11 @@ with mcol2:
     labels = ['Group A', 'Group B']
     x_pos = np.arange(len(labels))
     cra = [st.session_state.cra, st.session_state.crb]
-    error = [st.session_state.sea*100*1.96, st.session_state.seb*100*1.96]
+    if st.session_state.hypothesis  == "One-sided":
+        z = stats.norm.ppf(1-st.session_state.alpha)
+    else:
+        z = stats.norm.ppf(1-st.session_state.alpha/2)
+    error = [st.session_state.sea*100*z, st.session_state.seb*100*z]
 
     fig, ax = plt.subplots()
     ax.bar(x_pos,
@@ -246,3 +256,5 @@ with mcol2:
     ax.set_title(f"Event % at {(1-st.session_state.alpha)*100}% Confidence Level")
 
     st.pyplot(fig)
+
+    st.write(z)
