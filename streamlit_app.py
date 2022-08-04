@@ -219,6 +219,8 @@ with mcol1:
             "diff": [st.session_state.diff],
             "z-score": [st.session_state.z],
             "p-value": [st.session_state.p],
+            "α-value": [st.session_state.alpha],
+            # "significance": [st.session_state.significant]
         },
         index=pd.Index(["Metrics"]),
     )
