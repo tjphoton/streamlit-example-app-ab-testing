@@ -124,7 +124,7 @@ st.write(
     ## Significance Calculation Tool
     """
 )
-st.image("versai.png", width=120)
+
 st.write("")
 st.write("")
 
